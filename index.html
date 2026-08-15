@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Finanzas y Ahorros</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="header">
+        <h1>CONTROL FINANCIERO Y ALCANCÍA CONTABLE</h1>
+        <p>Gestión de Sueldo, Gastos Diarios y Fondos de Ahorro</p>
+    </div>
+
+    <div class="contenido">
+        <!-- Barra de Acciones -->
+        <div class="acciones-archivo">
+            <input type="file" id="input-archivo" accept=".txt" style="display: none;" onchange="cargarDesdeTxt(event)">
+            <button type="button" class="btn-accion btn-cargar" onclick="document.getElementById('input-archivo').click()">📂 Cargar 'finanzas.txt'</button>
+            <button type="button" class="btn-accion btn-guardar" onclick="exportarTxt()">💾 Guardar 'finanzas.txt'</button>
+            <button type="button" class="btn-accion btn-boleta" onclick="descargarBoletaTxt()">📄 Generar Boleta Formal</button>
+            <button type="button" class="btn-accion btn-reiniciar" onclick="reiniciarTodo()">🔄 Limpiar</button>
+        </div>
+
+        <!-- 4 Tarjetas de Resumen -->
+        <div class="cards-resumen">
+            <div class="card">
+                <h3>Total Disponible</h3>
+                <div class="monto" id="disp-disponible">S/ 0.00</div>
+            </div>
+            <div class="card gasto">
+                <h3>Total Gastado</h3>
+                <div class="monto" id="disp-gastado">S/ 0.00</div>
+            </div>
+            <div class="card ahorro">
+                <h3>Fondo de Ahorro</h3>
+                <div class="monto" id="disp-ahorro">S/ 0.00</div>
+            </div>
+            <div class="card sobrante">
+                <h3>Saldo Libre Restante</h3>
+                <div class="monto" id="disp-restante">S/ 0.00</div>
+            </div>
+        </div>
+
+        <!-- Formularios -->
+        <div class="grid-formularios">
+            <!-- 1. Sueldo e Ingresos -->
+            <div class="panel-form">
+                <h2>1. Sueldo y Fondos</h2>
+                <div class="campo">
+                    <label for="saldo-acumulado">Saldo Anterior (S/)</label>
+                    <input type="number" id="saldo-acumulado" step="0.01" value="0.00" oninput="actualizarValores()">
+                </div>
+                <div class="campo">
+                    <label for="sueldo-neto">Sueldo Neto Mensual (S/)</label>
+                    <input type="number" id="sueldo-neto" step="0.01" placeholder="0.00" oninput="actualizarValores()">
+                </div>
+                <div class="campo">
+                    <label for="ahorro-base">Ahorro Previo Acumulado (S/)</label>
+                    <input type="number" id="ahorro-base" step="0.01" value="0.00" oninput="actualizarValores()">
+                </div>
+            </div>
+
+            <!-- 2. Registro de Gastos -->
+            <div class="panel-form">
+                <h2>2. Registrar Gasto</h2>
+                <div class="fila-doble">
+                    <div class="campo">
+                        <label for="gasto-dia">Día</label>
+                        <input type="number" id="gasto-dia" value="17" min="1" max="31">
+                    </div>
+                    <div class="campo">
+                        <label for="gasto-mes">Mes</label>
+                        <input type="number" id="gasto-mes" value="9" min="1" max="12">
+                    </div>
+                </div>
+                <div class="campo">
+                    <label for="gasto-cat">Categoría</label>
+                    <select id="gasto-cat">
+                        <option value="Alquiler">Alquiler</option>
+                        <option value="Internet">Internet</option>
+                        <option value="Celular">Celular</option>
+                        <option value="Alimentacion">Alimentación</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Servicios">Servicios</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="gasto-desc">Descripción</label>
+                    <input type="text" id="gasto-desc" placeholder="Ej. Recibo de luz">
+                </div>
+                <div class="campo">
+                    <label for="gasto-monto">Monto (S/)</label>
+                    <input type="number" id="gasto-monto" step="0.01" placeholder="0.00">
+                </div>
+                <button type="button" class="btn-verde" onclick="registrarGasto()">- Registrar Gasto</button>
+            </div>
+
+            <!-- 3. Apartado de Ahorros / Ingresos Extra -->
+            <div class="panel-form">
+                <h2>3. Apartar Ahorro / Extra</h2>
+                <div class="fila-doble">
+                    <div class="campo">
+                        <label for="ahorro-dia">Día</label>
+                        <input type="number" id="ahorro-dia" value="17" min="1" max="31">
+                    </div>
+                    <div class="campo">
+                        <label for="ahorro-mes">Mes</label>
+                        <input type="number" id="ahorro-mes" value="9" min="1" max="12">
+                    </div>
+                </div>
+                <div class="campo">
+                    <label for="ahorro-cat">Origen / Destino</label>
+                    <select id="ahorro-cat">
+                        <option value="Ahorro Sueldo">Separar de mi Sueldo</option>
+                        <option value="Ingreso Extra">Ganancia / Trabajo Extra</option>
+                        <option value="Meta Ahorro">Fondo de Emergencia</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="ahorro-desc">Motivo / Detalle</label>
+                    <input type="text" id="ahorro-desc" placeholder="Ej. Ahorro para laptop">
+                </div>
+                <div class="campo">
+                    <label for="ahorro-monto">Monto a Ahorrar (S/)</label>
+                    <input type="number" id="ahorro-monto" step="0.01" placeholder="Ej. 100.00">
+                </div>
+                <button type="button" class="btn-ahorro" onclick="registrarAhorro()">+ Guardar en Ahorros</button>
+            </div>
+        </div>
+
+        <!-- Tabla Unificada -->
+        <div class="tabla-seccion">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Categoría</th>
+                        <th>Descripción</th>
+                        <th style="text-align: right;">Monto</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-cuerpo">
+                    <tr><td colspan="5" style="text-align: center; color: #64748b;">No hay movimientos registrados.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Enlace al archivo JavaScript independiente -->
+<script src="app.js"></script>
+
+</body>
+</html>
