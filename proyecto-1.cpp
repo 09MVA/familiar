@@ -6,9 +6,7 @@ using namespace std;
 
 const int MAX_REGISTROS = 300;
 
-// ============================================================================
-// FUNCIONES AUXILIARES CON ARITMÉTICA DE PUNTEROS
-// ============================================================================
+//funciones para evitar repetir comandos
 int longitudCadena(const char* origen) {
     if (!origen) return 0;
     int len = 0;
@@ -38,14 +36,12 @@ bool compararCadenas(const char* a, const char* b) {
     return *(a + i) == *(b + i);
 }
 
-// ============================================================================
-// CLASE MOVIMIENTO (GASTOS Y AHORROS CON GESTIÓN MANUAL DE MEMORIA)
-// ============================================================================
+//primera clase movimiento
 class Movimiento {
 private:
     int dia;
     int mes;
-    char* tipo;        // "Gasto" o "Ahorro"
+    char* tipo;        
     char* categoria;
     char* descripcion;
     double monto;
@@ -96,9 +92,7 @@ public:
     const char* getDescripcion() const { return descripcion ? descripcion : ""; }
 };
 
-// ============================================================================
-// CLASE GESTOR DE FINANZAS Y AHORROS
-// ============================================================================
+//segunda clase Gestor
 class GestorFinanzas {
 private:
     double saldoAnterior;
@@ -166,9 +160,7 @@ public:
         cout << "\n -> Fondo de ahorro consolidado: S/ " << ahorroBase << "\n";
     }
 
-    // ========================================================================
-    // PERSISTENCIA EN TXT
-    // ========================================================================
+    //registro para guardar en txt
     void guardarEnTxt(const char* ruta) const {
         ofstream file(ruta);
         if (!file.is_open()) {
@@ -204,7 +196,7 @@ public:
             file.getline(buffer, 256);
             int idx = 0;
 
-            // 1. Dia
+            // Dia
             int d = 0;
             while (*(buffer + idx) >= '0' && *(buffer + idx) <= '9') {
                 d = d * 10 + (*(buffer + idx) - '0');
@@ -212,7 +204,7 @@ public:
             }
             idx++;
 
-            // 2. Mes
+            // Mes
             int m = 0;
             while (*(buffer + idx) >= '0' && *(buffer + idx) <= '9') {
                 m = m * 10 + (*(buffer + idx) - '0');
@@ -220,7 +212,7 @@ public:
             }
             idx++;
 
-            // 3. Tipo
+            // Tipo
             char tipo[20];
             int tIdx = 0;
             while (*(buffer + idx) != '|' && *(buffer + idx) != '\0') {
@@ -231,7 +223,7 @@ public:
             *(tipo + tIdx) = '\0';
             idx++;
 
-            // 4. Categoria
+            // Categoria
             char cat[50];
             int cIdx = 0;
             while (*(buffer + idx) != '|' && *(buffer + idx) != '\0') {
@@ -242,7 +234,7 @@ public:
             *(cat + cIdx) = '\0';
             idx++;
 
-            // 5. Descripcion
+            // Descripcion
             char desc[100];
             int dIdx = 0;
             while (*(buffer + idx) != '|' && *(buffer + idx) != '\0') {
@@ -253,7 +245,7 @@ public:
             *(desc + dIdx) = '\0';
             idx++;
 
-            // 6. Monto
+            // Monto
             double mon = 0.0, dec = 0.1;
             bool esDec = false;
             while (*(buffer + idx) != '\0') {
@@ -272,9 +264,7 @@ public:
         cout << "[OK] Se cargaron " << totalMovimientos << " movimientos desde " << ruta << "\n";
     }
 
-    // ========================================================================
-    // GENERACIÓN DE BOLETA FORMAL EN TXT
-    // ========================================================================
+    //boleta generada
     void exportarBoletaTxt(const char* ruta) const {
         ofstream file(ruta);
         if (!file.is_open()) return;
@@ -343,9 +333,7 @@ public:
     }
 };
 
-// ============================================================================
-// MAIN
-// ============================================================================
+//funcionamiento
 int main() {
     GestorFinanzas gestor;
     const char* txtFile = "finanzas.txt";
