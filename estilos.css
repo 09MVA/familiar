@@ -43,7 +43,7 @@ body {
     padding: 25px;
 }
 
-/* Barra de acciones de archivo */
+/* Acciones del archivo */
 .acciones-archivo {
     display: flex;
     gap: 10px;
@@ -71,7 +71,7 @@ body {
 .btn-boleta { background: #059669; }
 .btn-reiniciar { background: #e11d48; flex: 0.4; }
 
-/* Tarjetas de Métricas */
+/* Tarjetas */
 .cards-resumen {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
